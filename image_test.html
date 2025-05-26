@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 600px;
+        }
+        .test-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .file-list {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Image Loading Test</h1>
+    
+    <div class="file-list">
+        <h3>Expected Files in Same Folder:</h3>
+        <ul>
+            <li>coinhunt.png</li>
+            <li>flower.png</li>
+            <li>food.png</li>
+            <li>hive.png</li>
+            <li>merlion.png</li>
+            <li>star.png</li>
+            <li>tick.png</li>
+            <li>tree.png</li>
+            <li>wefie.png</li>
+        </ul>
+    </div>
+
+    <div class="test-grid" id="testGrid">
+        <!-- Test items will be generated here -->
+    </div>
+
+    <div id="results" style="margin-top: 20px;">
+        <h3>Results:</h3>
+        <div id="resultText"></div>
+    </div>
+
+    <script>
+        const images = [
+            { file: 'coinhunt.png', name: 'Coin Hunt' },
+            { file: 'flower.png', name: 'Flower' },
+            { file: 'food.png', name: 'Food' },
+            { file: 'hive.png', name: 'Hive Building' },
+            { file: 'merlion.png', name: 'Merlion' },
+            { file: 'star.png', name: 'Star' },
+            { file: 'tick.png', name: 'Tick' },
+            { file: 'tree.png', name: 'Tree' },
+            { file: 'wefie.png', name: 'Wefie' }
+        ];
+
+        let loadedCount = 0;
+        let failedCount = 0;
+        let results = [];
+
+        function updateResults() {
+            const resultDiv = document.getElementById('resultText');
+            resultDiv.innerHTML = `
+                <p><span class="success">✅ Loaded: ${loadedCount}</span></p>
+                <p><span class="error">❌ Failed: ${failedCount}</span></p>
+                <hr>
+                <h4>Details:</h4>
+                ${results.map(r => `<p>${r}</p>`).join('')}
+            `;
+        }
+
+        function createTestItem(imageData) {
+            const item = document.createElement('div');
+            item.className = 'test-item';
+            
+            const img = document.createElement('img');
+            img.src = imageData.file;
+            img.alt = imageData.name;
+            
+            img.onload = function() {
+                loadedCount++;
+                results.push(`<span class="success">✅ ${imageData.file} - OK</span>`);
+                updateResults();
+            };
+            
+            img.onerror = function() {
+                failedCount++;
+                results.push(`<span class="error">❌ ${imageData.file} - File not found or can't load</span>`);
+                updateResults();
+                this.style.display = 'none';
+                
+                // Add error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error';
+                errorMsg.textContent = 'Image not found';
+                item.appendChild(errorMsg);
+            };
+            
+            const title = document.createElement('h4');
+            title.textContent = imageData.name;
+            
+            const filename = document.createElement('p');
+            filename.textContent = imageData.file;
+            filename.style.fontSize = '12px';
+            filename.style.color = '#666';
+            
+            item.appendChild(img);
+            item.appendChild(title);
+            item.appendChild(filename);
+            
+            return item;
+        }
+
+        // Generate test grid
+        const grid = document.getElementById('testGrid');
+        images.forEach(imageData => {
+            grid.appendChild(createTestItem(imageData));
+        });
+
+        // Initial results
+        updateResults();
+
+        // Log current directory info for debugging
+        console.log('Current page URL:', window.location.href);
+        console.log('Testing image paths relative to:', window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1));
+    </script>
+</body>
+</html>

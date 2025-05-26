@@ -593,11 +593,8 @@
         const SUPABASE_URL = 'https://your-project.supabase.co';
         const SUPABASE_ANON_KEY = 'your-anon-key-here';
         
-        // GitHub raw URL base (replace with your GitHub username and repo name)
-        const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/';
-        
-        // Alternative: If images are in same folder as HTML, leave this empty
-        const IMAGE_BASE_URL = ''; // or use GITHUB_BASE_URL if hosting images on GitHub
+        // For local images in same folder as HTML file
+        const IMAGE_BASE_URL = './'; // Current folder
         
         // Initialize Supabase client
         let supabase;
