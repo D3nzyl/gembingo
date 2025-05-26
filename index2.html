@@ -581,36 +581,18 @@
         </div>
     </div>
 
-    <!-- Include Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔥 REPLACE THESE WITH YOUR SUPABASE CREDENTIALS
-        const SUPABASE_URL = 'https://yywleubcgvtofhesovbf.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5d2xldWJjZ3Z0b2ZoZXNvdmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMzcwMjIsImV4cCI6MjA2MzgxMzAyMn0.wqnvGj_xXPyZJLN8LmMhQQ2_GX6ixV_NJ-abiNJEC7g';
+        // 🚀 INSTANT DEPLOY VERSION - NO SETUP NEEDED!
+        // Uses JSONBin.io as a simple database
         
-        // Initialize Supabase client
-        let supabase;
-        
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            if (SUPABASE_URL.includes('your-project') || SUPABASE_ANON_KEY.includes('your-anon-key')) {
-                alert('⚠️ Please update the Supabase credentials in the JavaScript code!\n\nFind them in your Supabase dashboard: Settings → API');
-                return;
-            }
-            
-            try {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('✅ Supabase connected successfully');
-            } catch (error) {
-                console.error('❌ Supabase connection failed:', error);
-                alert('Failed to connect to database. Please check your credentials.');
-            }
-        });
+        const API_KEY = '$2a$10$Bd8Z9H1s.zJg9OkGXKvMZO2RhzzCxjwUGExSYQKbMk7XTXWpNG/d2';
+        const BIN_ID = '674d8a22ad19ca34f8c2a33e';
+        const BASE_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
 
         // Global variables
         let currentUser = null;
         let userType = null;
-        let currentStudent = null;
+        let allData = { students: {} };
 
         // Bingo activities
         const bingoActivities = [
@@ -620,7 +602,7 @@
             { id: 4, title: 'Take Photo with GEM Supertrees', icon: '🌳' },
             { id: 5, title: 'Complete GEM Summer Survey', icon: '✅' },
             { id: 6, title: 'Eat Any Local Dishes', icon: '🍜' },
-            { id: 7, title: 'Take a Welfie with Your Coursemates', icon: '👥' },
+            { id: 7, title: 'Take a Wefie with Your Coursemates', icon: '👥' },
             { id: 8, title: "Take a Photo with Singapore's National Flower", icon: '🌺' },
             { id: 9, title: 'Find One GEM Summer Coin', icon: '🪙' }
         ];
@@ -638,22 +620,46 @@
         }
 
         function hideStatus(elementId) {
-            const statusEl = document.getElementById(elementId);
-            if (statusEl) {
-                statusEl.classList.add('hidden');
-            }
+            document.getElementById(elementId).classList.add('hidden');
         }
 
         function setLoading(btnId, loading) {
             const btn = document.getElementById(btnId);
-            if (!btn) return;
-            
             btn.disabled = loading;
-            if (loading) {
-                btn.setAttribute('data-original-text', btn.textContent);
-                btn.textContent = 'Loading...';
-            } else {
-                btn.textContent = btn.getAttribute('data-original-text') || btn.textContent;
+            btn.textContent = loading ? 'Loading...' : (btn.getAttribute('data-text') || 'Submit');
+        }
+
+        // API functions
+        async function loadData() {
+            try {
+                const response = await fetch(BASE_URL + '/latest', {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    allData = data.record || { students: {} };
+                } else {
+                    allData = { students: {} };
+                }
+            } catch (error) {
+                console.log('Using offline mode');
+                allData = { students: {} };
+            }
+        }
+
+        async function saveData() {
+            try {
+                await fetch(BASE_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(allData)
+                });
+            } catch (error) {
+                console.log('Save failed - using offline mode');
             }
         }
 
@@ -703,11 +709,6 @@
 
         // Authentication Functions
         window.studentRegister = async function() {
-            if (!supabase) {
-                alert('Database not connected. Please check your credentials.');
-                return;
-            }
-
             const studentId = document.getElementById('regStudentId').value.trim();
             const name = document.getElementById('regName').value.trim();
 
@@ -718,23 +719,21 @@
                 return;
             }
 
+            if (allData.students[studentId]) {
+                showStatus('registerStatus', 'Student ID already exists', 'error');
+                return;
+            }
+
             try {
                 setLoading('registerBtn', true);
                 
-                const { data, error } = await supabase
-                    .from('students')
-                    .insert([{ student_id: studentId, name: name }])
-                    .select();
+                allData.students[studentId] = {
+                    name: name,
+                    completedActivities: [],
+                    createdAt: new Date().toISOString()
+                };
 
-                if (error) {
-                    if (error.code === '23505') {
-                        showStatus('registerStatus', 'Student ID already exists', 'error');
-                    } else {
-                        showStatus('registerStatus', 'Registration failed: ' + error.message, 'error');
-                    }
-                    return;
-                }
-
+                await saveData();
                 showStatus('registerStatus', 'Registration successful! You can now login.', 'success');
                 
                 // Clear form
@@ -742,7 +741,6 @@
                 document.getElementById('regName').value = '';
 
             } catch (error) {
-                console.error('Registration error:', error);
                 showStatus('registerStatus', 'Registration failed. Please try again.', 'error');
             } finally {
                 setLoading('registerBtn', false);
@@ -750,11 +748,6 @@
         };
 
         window.studentLogin = async function() {
-            if (!supabase) {
-                alert('Database not connected. Please check your credentials.');
-                return;
-            }
-
             const studentId = document.getElementById('loginStudentId').value.trim();
 
             hideStatus('loginStatus');
@@ -766,40 +759,18 @@
 
             try {
                 setLoading('loginBtn', true);
+                await loadData();
                 
-                // Get student data
-                const { data: student, error: studentError } = await supabase
-                    .from('students')
-                    .select('*')
-                    .eq('student_id', studentId)
-                    .single();
-
-                if (studentError) {
+                if (!allData.students[studentId]) {
                     showStatus('loginStatus', 'Student ID not found. Please register first.', 'error');
                     return;
                 }
 
-                // Get completed activities
-                const { data: activities, error: activitiesError } = await supabase
-                    .from('completed_activities')
-                    .select('activity_id')
-                    .eq('student_id', studentId);
-
-                if (activitiesError) {
-                    console.error('Error loading activities:', activitiesError);
-                }
-
                 currentUser = studentId;
                 userType = 'student';
-                currentStudent = {
-                    ...student,
-                    completedActivities: activities ? activities.map(a => a.activity_id) : []
-                };
-                
                 showStudentDashboard();
 
             } catch (error) {
-                console.error('Login error:', error);
                 showStatus('loginStatus', 'Login failed. Please try again.', 'error');
             } finally {
                 setLoading('loginBtn', false);
@@ -825,32 +796,11 @@
             }
         };
 
-        window.logout = function() {
-            currentUser = null;
-            userType = null;
-            currentStudent = null;
-            
-            // Hide all dashboards
-            document.getElementById('studentDashboard').classList.add('hidden');
-            document.getElementById('staffDashboard').classList.add('hidden');
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('verificationSection').classList.add('hidden');
-            
-            // Clear forms
-            document.getElementById('loginStudentId').value = '';
-            document.getElementById('staffPassword').value = '';
-            document.getElementById('searchStudentId').value = '';
-            
-            // Hide status messages
-            hideStatus('loginStatus');
-            hideStatus('staffStatus');
-        };
-
         function showStudentDashboard() {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('studentDashboard').classList.remove('hidden');
-            document.getElementById('studentName').textContent = currentStudent.name;
-            document.getElementById('displayStudentId').textContent = currentStudent.student_id;
+            document.getElementById('studentName').textContent = allData.students[currentUser].name;
+            document.getElementById('displayStudentId').textContent = currentUser;
             generateBingoBoard();
         }
 
@@ -867,7 +817,7 @@
                 const cell = document.createElement('div');
                 cell.className = 'bingo-cell';
                 
-                if (currentStudent.completedActivities.includes(activity.id)) {
+                if (allData.students[currentUser].completedActivities.includes(activity.id)) {
                     cell.classList.add('completed');
                 }
 
@@ -882,11 +832,6 @@
 
         // Staff Functions
         window.searchStudent = async function() {
-            if (!supabase) {
-                alert('Database not connected. Please check your credentials.');
-                return;
-            }
-
             const studentId = document.getElementById('searchStudentId').value.trim();
             
             if (!studentId) {
@@ -894,43 +839,21 @@
                 return;
             }
 
-            try {
-                // Get student data
-                const { data: student, error: studentError } = await supabase
-                    .from('students')
-                    .select('*')
-                    .eq('student_id', studentId)
-                    .single();
+            await loadData();
 
-                if (studentError) {
-                    alert('Student not found');
-                    return;
-                }
-
-                // Get completed activities
-                const { data: activities, error: activitiesError } = await supabase
-                    .from('completed_activities')
-                    .select('activity_id')
-                    .eq('student_id', studentId);
-
-                if (activitiesError) {
-                    console.error('Error loading activities:', activitiesError);
-                }
-
-                document.getElementById('verifyStudentName').textContent = student.name;
-                document.getElementById('verifyStudentId').textContent = student.student_id;
-                document.getElementById('verificationSection').classList.remove('hidden');
-                
-                const completedActivityIds = activities ? activities.map(a => a.activity_id) : [];
-                generateActivityList(studentId, completedActivityIds);
-
-            } catch (error) {
-                console.error('Error searching student:', error);
-                alert('Error searching for student');
+            if (!allData.students[studentId]) {
+                alert('Student not found');
+                return;
             }
+
+            document.getElementById('verifyStudentName').textContent = allData.students[studentId].name;
+            document.getElementById('verifyStudentId').textContent = studentId;
+            document.getElementById('verificationSection').classList.remove('hidden');
+            
+            generateActivityList(studentId);
         };
 
-        function generateActivityList(studentId, completedActivityIds) {
+        function generateActivityList(studentId) {
             const listElement = document.getElementById('activityList');
             listElement.innerHTML = '';
 
@@ -938,7 +861,7 @@
                 const item = document.createElement('div');
                 item.className = 'activity-item';
                 
-                const isCompleted = completedActivityIds.includes(activity.id);
+                const isCompleted = allData.students[studentId].completedActivities.includes(activity.id);
                 
                 item.innerHTML = `
                     <span>
@@ -956,79 +879,27 @@
         }
 
         window.toggleActivity = async function(studentId, activityId) {
-            if (!supabase) {
-                alert('Database not connected. Please check your credentials.');
-                return;
+            const completedActivities = allData.students[studentId].completedActivities;
+            const index = completedActivities.indexOf(activityId);
+            
+            if (index > -1) {
+                completedActivities.splice(index, 1);
+                alert('Activity undone successfully!');
+            } else {
+                completedActivities.push(activityId);
+                alert('Activity verified successfully!');
             }
-
-            try {
-                // Check if activity is already completed
-                const { data: existing, error: checkError } = await supabase
-                    .from('completed_activities')
-                    .select('id')
-                    .eq('student_id', studentId)
-                    .eq('activity_id', activityId)
-                    .single();
-
-                if (existing) {
-                    // Remove activity (undo)
-                    const { error: deleteError } = await supabase
-                        .from('completed_activities')
-                        .delete()
-                        .eq('student_id', studentId)
-                        .eq('activity_id', activityId);
-
-                    if (deleteError) {
-                        console.error('Error undoing activity:', deleteError);
-                        alert('Error undoing activity');
-                        return;
-                    }
-
-                    alert('Activity undone successfully!');
-                } else {
-                    // Add activity (verify)
-                    const { error: insertError } = await supabase
-                        .from('completed_activities')
-                        .insert([{ student_id: studentId, activity_id: activityId }]);
-
-                    if (insertError) {
-                        console.error('Error verifying activity:', insertError);
-                        alert('Error verifying activity');
-                        return;
-                    }
-
-                    alert('Activity verified successfully!');
-                }
-                
-                // Refresh the activity list
-                searchStudent();
-                
-                // Update student view if they're logged in
-                if (currentUser === studentId && userType === 'student') {
-                    // Reload student data
-                    const { data: activities, error: activitiesError } = await supabase
-                        .from('completed_activities')
-                        .select('activity_id')
-                        .eq('student_id', studentId);
-
-                    if (!activitiesError) {
-                        currentStudent.completedActivities = activities ? activities.map(a => a.activity_id) : [];
-                        generateBingoBoard();
-                    }
-                }
-
-            } catch (error) {
-                console.error('Error toggling activity:', error);
-                alert('Error updating activity');
+            
+            await saveData();
+            generateActivityList(studentId);
+            
+            // Update student view if they're logged in
+            if (currentUser === studentId && userType === 'student') {
+                generateBingoBoard();
             }
         };
 
         async function loadAllStudents() {
-            if (!supabase) {
-                alert('Database not connected. Please check your credentials.');
-                return;
-            }
-
             const listElement = document.getElementById('studentsList');
             const loadingElement = document.getElementById('studentsLoading');
             
@@ -1036,31 +907,16 @@
                 loadingElement.classList.remove('hidden');
                 listElement.innerHTML = '';
 
-                // Get all students
-                const { data: students, error: studentsError } = await supabase
-                    .from('students')
-                    .select('student_id, name, created_at')
-                    .order('created_at', { ascending: false });
+                await loadData();
 
-                if (studentsError) {
-                    console.error('Error loading students:', studentsError);
-                    listElement.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading students</p>';
-                    return;
-                }
-
-                if (!students || students.length === 0) {
+                if (Object.keys(allData.students).length === 0) {
                     listElement.innerHTML = '<p style="text-align: center; color: #94a3b8;">No students registered yet.</p>';
                     return;
                 }
 
-                // Get activity counts for each student
-                for (const student of students) {
-                    const { count } = await supabase
-                        .from('completed_activities')
-                        .select('*', { count: 'exact', head: true })
-                        .eq('student_id', student.student_id);
-
-                    const completedCount = count || 0;
+                Object.keys(allData.students).forEach(studentId => {
+                    const student = allData.students[studentId];
+                    const completedCount = student.completedActivities.length;
                     
                     const item = document.createElement('div');
                     item.className = 'student-item';
@@ -1068,55 +924,19 @@
                     item.innerHTML = `
                         <div class="student-info">
                             <div class="student-name">${student.name}</div>
-                            <div class="student-id">ID: ${student.student_id}</div>
+                            <div class="student-id">ID: ${studentId}</div>
                         </div>
                         <div class="progress-info">
                             <div class="progress-count">${completedCount}/9</div>
                             <div class="progress-label">Completed</div>
                         </div>
                         <div class="student-actions">
-                            <button class="view-btn" onclick="viewStudent('${student.student_id}')">View</button>
+                            <button class="view-btn" onclick="viewStudent('${studentId}')">View</button>
                         </div>
                     `;
 
                     listElement.appendChild(item);
-                }
+                });
 
             } catch (error) {
-                console.error('Error loading students:', error);
-                listElement.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading students</p>';
-            } finally {
-                loadingElement.classList.add('hidden');
-            }
-        }
-
-        window.viewStudent = function(studentId) {
-            // Switch to verification tab and search for the student
-            document.querySelectorAll('.staff-tabs .staff-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector('.staff-tabs .staff-tab').classList.add('active');
-            
-            document.getElementById('verifyTab').classList.remove('hidden');
-            document.getElementById('studentsTab').classList.add('hidden');
-            
-            document.getElementById('searchStudentId').value = studentId;
-            searchStudent();
-        };
-
-        // Add Enter key support for forms
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const activeElement = document.activeElement;
-                if (activeElement.id === 'loginStudentId') {
-                    studentLogin();
-                } else if (activeElement.id === 'regStudentId' || activeElement.id === 'regName') {
-                    studentRegister();
-                } else if (activeElement.id === 'staffPassword') {
-                    staffLogin();
-                } else if (activeElement.id === 'searchStudentId') {
-                    searchStudent();
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+                listElement.innerHTML = '<p style="text-align: center; color: #ef4444;">Error
