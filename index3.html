@@ -454,11 +454,6 @@
                 font-size: 11px;
             }
             .activity-icon {
-                width: 35px;
-                height: 35px;
-            }
-            
-            .activity-emoji {
                 font-size: 1.2rem;
             }
             .verify-btn {
@@ -590,14 +585,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // 🔥 REPLACE THESE WITH YOUR SUPABASE CREDENTIALS
-        const SUPABASE_URL = 'https://your-project.supabase.co';
-        const SUPABASE_ANON_KEY = 'your-anon-key-here';
-        
-        // GitHub raw URL base (replace with your GitHub username and repo name)
-        const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/';
-        
-        // Alternative: If images are in same folder as HTML, leave this empty
-        const IMAGE_BASE_URL = ''; // or use GITHUB_BASE_URL if hosting images on GitHub
+        const SUPABASE_URL = 'https://yywleubcgvtofhesovbf.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5d2xldWJjZ3Z0b2ZoZXNvdmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMzcwMjIsImV4cCI6MjA2MzgxMzAyMn0.wqnvGj_xXPyZJLN8LmMhQQ2_GX6ixV_NJ-abiNJEC7g';
         
         // Initialize Supabase client
         let supabase;
@@ -623,17 +612,17 @@
         let userType = null;
         let currentStudent = null;
 
-        // Bingo activities with image files and fallback emojis
+        // Bingo activities
         const bingoActivities = [
-            { id: 1, title: 'Take a Picture with Merlion', image: 'merlion.png', emoji: '🗽' },
-            { id: 2, title: "Visit NTU's Dim Sum Building", image: 'hive.png', emoji: '🏢' },
-            { id: 3, title: 'Activity by GEM Summer', image: 'star.png', emoji: '⭐' },
-            { id: 4, title: 'Take Photo with GEM Supertrees', image: 'tree.png', emoji: '🌳' },
-            { id: 5, title: 'Complete GEM Summer Survey', image: 'tick.png', emoji: '✅' },
-            { id: 6, title: 'Eat Any Local Dishes', image: 'food.png', emoji: '🍜' },
-            { id: 7, title: 'Take a Welfie with Your Coursemates', image: 'wefie.png', emoji: '👥' },
-            { id: 8, title: "Take a Photo with Singapore's National Flower", image: 'flower.png', emoji: '🌺' },
-            { id: 9, title: 'Find One GEM Summer Coin', image: 'coinhunt.png', emoji: '🪙' }
+            { id: 1, title: 'Take a Picture with Merlion', icon: '🗽' },
+            { id: 2, title: "Visit NTU's Dim Sum Building", icon: '🏢' },
+            { id: 3, title: 'Activity by GEM Summer', icon: '⭐' },
+            { id: 4, title: 'Take Photo with GEM Supertrees', icon: '🌳' },
+            { id: 5, title: 'Complete GEM Summer Survey', icon: '✅' },
+            { id: 6, title: 'Eat Any Local Dishes', icon: '🍜' },
+            { id: 7, title: 'Take a Welfie with Your Coursemates', icon: '👥' },
+            { id: 8, title: "Take a Photo with Singapore's National Flower", icon: '🌺' },
+            { id: 9, title: 'Find One GEM Summer Coin', icon: '🪙' }
         ];
 
         // Utility functions
@@ -882,12 +871,8 @@
                     cell.classList.add('completed');
                 }
 
-                const imageUrl = IMAGE_BASE_URL + activity.image;
-                
                 cell.innerHTML = `
-                    <img src="${imageUrl}" alt="${activity.title}" class="cell-icon" 
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <div class="cell-emoji" style="display:none;">${activity.emoji}</div>
+                    <div class="cell-icon">${activity.icon}</div>
                     <div class="cell-title">${activity.title}</div>
                 `;
 
@@ -955,13 +940,9 @@
                 
                 const isCompleted = completedActivityIds.includes(activity.id);
                 
-                const imageUrl = IMAGE_BASE_URL + activity.image;
-                
                 item.innerHTML = `
                     <span>
-                        <img src="${imageUrl}" alt="${activity.title}" class="activity-icon" 
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <div class="activity-emoji" style="display:none;">${activity.emoji}</div>
+                        <div class="activity-icon">${activity.icon}</div>
                         <div>${activity.title}</div>
                     </span>
                     <button class="verify-btn ${isCompleted ? 'completed' : ''}" 
