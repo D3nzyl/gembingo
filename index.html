@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEM Trailblazer Summer Bingo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Squada+One&display=swap" rel="stylesheet"/>
     <style>
         * {
             margin: 0;
@@ -13,7 +16,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            background: #174785;
+            /* background: linear-gradient(135deg, #1e3a8a, #3b82f6); */
             min-height: 100vh;
             color: white;
         }
@@ -30,15 +34,18 @@
         }
 
         .title {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #fbbf24;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 10px;
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+            font-size: 3rem;          /* adjust as needed */
+            color: #FFD700;           /* gold/yellow for that arcade pop */
         }
 
         .subtitle {
             font-size: 2.5rem;
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
             font-weight: bold;
             color: #06b6d4;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -46,9 +53,11 @@
         }
 
         .tagline {
-            font-size: 1.5rem;
-            color: #fbbf24;
-            font-weight: bold;
+            font-family: 'Squada One', cursive;
+            text-transform: uppercase;
+            font-size: 1.5rem;       /* tweak to fit your design */
+            color: #ffcc00;        /* or whatever accent colour you like */
+
         }
 
         .auth-section {
@@ -130,18 +139,20 @@
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 4px;
-            max-width: 600px;
+            max-width: 50vw;
             width: 100%;
             aspect-ratio: 1;
             margin: 0 auto;
-            background: #8B4513;
-            padding: 10px;
+            background: #efe0c1;
+            padding: 1vw;
             border-radius: 10px;
             border: 3px solid #654321;
         }
 
         .bingo-cell {
-            background: #862121;
+            font-family: 'Baloo 2', cursive;
+            font-weight: 700;
+            background: #b43032;
             border: 2px solid #8B4513;
             border-radius: 8px;
             padding: 15px;
@@ -181,9 +192,9 @@
 
         .cell-title {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 20px;
             line-height: 1.2;
-            color: white;
+            color: #eedfc0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             margin-top: 8px;
         }
@@ -434,13 +445,20 @@
             color: #fecaca;
         }
 
+       
+
+        .rules-list {
+
+        }
         @media (max-width: 768px) {
-            .title { font-size: 2rem; }
+            .rules-title {margin-top: 0.5em}
+            .rules-list {margin-left: 0.5em}
+            .title { font-size: 2rem;
+                    margin-top: 1em; }
             .subtitle { font-size: 1.8rem; }
             .tagline { font-size: 1.2rem; }
             .bingo-board { 
                 max-width: calc(100vw - 24px);
-                height: calc(100vw - 24px);
             }
             .activity-list {
                 max-width: 90vw;
@@ -454,10 +472,13 @@
                 font-size: 11px;
             }
             .cell-icon {
-                width: 28px;
-                height: 28px;
+                width: 50px;
+                height: 50px;
             }
-            
+            .cell-title {
+            font-size: 1em;
+            }
+
             .activity-icon {
                 width: 25px;
                 height: 25px;
@@ -487,7 +508,7 @@
         <header class="header">
             <h1 class="title">GAME ON!</h1>
             <h2 class="subtitle">LEVEL UP</h2>
-            <p class="tagline">GEM TRAILBLAZER SUMMER</p>
+            <p class="tagline">GEM TRAILBLAZER SUMMER BINGO</p>
         </header>
 
         <!-- Authentication Section -->
@@ -507,8 +528,8 @@
                 <div id="studentLogin">
                     <div id="loginStatus" class="status hidden"></div>
                     <div class="form-group">
-                        <label>Student ID</label>
-                        <input type="text" id="loginStudentId" placeholder="Enter your student ID">
+                        <label>Username</label>
+                        <input type="text" id="loginStudentId" placeholder="Enter your Username">
                     </div>
                     <button class="btn" id="loginBtn" onclick="studentLogin()">Login</button>
                 </div>
@@ -516,8 +537,8 @@
                 <div id="studentRegister" class="hidden">
                     <div id="registerStatus" class="status hidden"></div>
                     <div class="form-group">
-                        <label>Student ID</label>
-                        <input type="text" id="regStudentId" placeholder="Enter your student ID">
+                        <label>Username</label>
+                        <input type="text" id="regStudentId" placeholder="Enter your Username">
                     </div>
                     <div class="form-group">
                         <label>Full Name</label>
@@ -542,12 +563,14 @@
         <div id="studentDashboard" class="hidden">
             <div class="user-info">
                 <h3>Welcome, <span id="studentName"></span>!</h3>
-                <p>Student ID: <span id="displayStudentId"></span></p>
+                <p>Username: <span id="displayStudentId"></span></p>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
 
             <div class="bingo-board" id="bingoBoard">
                 <!-- Bingo cells will be generated here -->
+            </div>
+            <div class="bingo-rules" id="bingoRules">
             </div>
         </div>
 
@@ -567,7 +590,7 @@
                 <!-- Verify Activities Tab -->
                 <div id="verifyTab">
                     <div class="student-search">
-                        <input type="text" id="searchStudentId" placeholder="Enter Student ID to verify">
+                        <input type="text" id="searchStudentId" placeholder="Enter Username to verify">
                         <button class="btn" onclick="searchStudent()">Search Student</button>
                     </div>
 
@@ -727,7 +750,7 @@
             hideStatus('registerStatus');
 
             if (!studentId || !name) {
-                showStatus('registerStatus', 'Please fill in both Student ID and Name', 'error');
+                showStatus('registerStatus', 'Please fill in both Username and Name', 'error');
                 return;
             }
 
@@ -741,7 +764,7 @@
 
                 if (error) {
                     if (error.code === '23505') {
-                        showStatus('registerStatus', 'Student ID already exists', 'error');
+                        showStatus('registerStatus', 'Username already exists', 'error');
                     } else {
                         showStatus('registerStatus', 'Registration failed: ' + error.message, 'error');
                     }
@@ -895,6 +918,17 @@
 
                 boardElement.appendChild(cell);
             });
+
+            const bingoRules = document.getElementById('bingoRules');
+            bingoRules.innerHTML =`
+            <h2 class="rules-title">Rules</h2>
+                <ul class="rules-list">
+                    <li>Present your card at the OGEM Satellite Office for a stamp for each completed activity.</li>
+                    <li>Each activity must be accompanied by a photo or video as proof.</li>
+                    <li>Complete any horizontal, vertical, or diagonal line to redeem one prize at the OGEM Satellite Office.</li>
+                    <li>All prizes are subject to availability on a “while-stocks-last” basis.</li>
+                </ul>`;
+
         }
 
         // Staff Functions

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GEM Trailblazer Summer Bingo</title>
+  <!-- UPDATED: Import pixel font for header -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── GLOBAL ── */
+    body {
+      margin: 0;
+      background-color: #002A60;
+      font-family: sans-serif;
+      color: #FFF8DC;
+    }
+
+    /* ── HEADER / HERO ── */
+    .header { /* UPDATED: new header wrapper */
+      text-align: center;
+      padding: 1rem 0;
+      background-color: #0D3F8C;
+      border-bottom: 8px solid #3EA243;
+    }
+    .header h1, .header h2 { /* UPDATED */
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      text-shadow: 2px 2px #000;
+    }
+    .header h1 { /* UPDATED */
+      font-size: 2.5rem;
+      color: #FFD600;
+    }
+    .header h2 { /* UPDATED */
+      font-size: 2rem;
+      color: #00B8E6;
+      margin-top: 0.2rem;
+    }
+    .header .subtitle { /* UPDATED */
+      font-family: inherit;
+      font-size: 1rem;
+      color: #FFD600;
+      margin-top: 0.5rem;
+    }
+
+    /* ── BOARD CONTAINER ── */
+    .board-wrapper { /* UPDATED */
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #0740A0;
+      border: 8px solid #3EA243;
+      border-radius: 12px;
+    }
+
+    /* ── BINGO GRID ── */
+    .bingo-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background-color: #F5F5DC;
+      border: 4px solid #FFF8DC;
+      border-radius: 6px;
+    }
+
+    /* ── EACH CELL ── */
+    .bingo-cell {
+      background-color: #B8342E;
+      color: #FFF8DC;
+      border: 2px solid #FFF8DC;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    .bingo-cell img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── MOBILE SQUARE ASPECT ── */
+    @media (max-width: 768px) {
+      .board-wrapper { /* UPDATED */
+        width: calc(100vw - 24px);
+        padding: 0.5rem;
+      }
+      .bingo-board { /* UPDATED */
+        aspect-ratio: 1 / 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header"> <!-- UPDATED -->
+    <h1>GAME ON!</h1>
+    <h2>LEVEL UP</h2>
+    <div class="subtitle">GEM TRAILBLAZER SUMMER</div>
+  </div>
+
+  <div class="board-wrapper"> <!-- UPDATED -->
+    <div class="bingo-board">
+      <!-- Your existing .bingo-cell elements go here; no changes needed inside -->
+      <div class="bingo-cell"><img src="icons/merlion.png"><br>Take a Picture with Merlion</div>
+      <div class="bingo-cell"><img src="icons/dimsum.png"><br>Visit NTU's Dim Sum Building</div>
+      <div class="bingo-cell"><img src="icons/star.png"><br>Activity by GEM Summer</div>
+      <div class="bingo-cell"><img src="icons/supertrees.png"><br>Take Photo With Supertrees</div>
+      <div class="bingo-cell"><img src="icons/survey.png"><br>Complete GEM Summer Survey</div>
+      <div class="bingo-cell"><img src="icons/local-dishes.png"><br>Eat Any Local Dishes</div>
+      <div class="bingo-cell"><img src="icons/coursemates.png"><br>Take a Welfie With Your Coursemates</div>
+      <div class="bingo-cell"><img src="icons/flower.png"><br>Take a Photo With Singapore's National Flower</div>
+      <div class="bingo-cell"><img src="icons/coin.png"><br>Find One GEM Summer Coin</div>
+    </div>
+  </div>
+</body>
+</html>
