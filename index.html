@@ -141,7 +141,6 @@
             gap: 4px;
             max-width: 50vw;
             width: 100%;
-            aspect-ratio: 1;
             margin: 0 auto;
             background: #efe0c1;
             padding: 1vw;
@@ -448,7 +447,7 @@
 
         .rules-list {
 
-        }
+            }
         @media (max-width: 800px) {
             .rules-title {margin-top: 0.5em}
             .rules-list {margin-left: 0.8em}
@@ -798,7 +797,7 @@
             hideStatus('loginStatus');
 
             if (!studentId) {
-                showStatus('loginStatus', 'Please enter your Student ID', 'error');
+                showStatus('loginStatus', 'Please enter your Username', 'error');
                 return;
             }
 
@@ -813,7 +812,7 @@
                     .single();
 
                 if (studentError) {
-                    showStatus('loginStatus', 'Student ID not found. Please register first.', 'error');
+                    showStatus('loginStatus', 'Username not found. Please register first.', 'error');
                     return;
                 }
 
@@ -929,7 +928,7 @@
                     <li>Each activity must be accompanied by a photo or video as proof.</li>
                     <li>Complete any horizontal, vertical, or diagonal line to redeem one prize at the OGEM Satellite Office.</li>
                     <li>All prizes are subject to availability on a “while-stocks-last” basis.</li>
-                </ul>`;
+                </ul>`; 
 
         }
 
@@ -943,7 +942,7 @@
             const studentId = document.getElementById('searchStudentId').value.trim().toLowerCase();;
             
             if (!studentId) {
-                alert('Please enter a Student ID');
+                alert('Please enter a Username');
                 return;
             }   
 
