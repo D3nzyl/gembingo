@@ -151,9 +151,7 @@
             font-family: 'Baloo 2', cursive;
             font-weight: 700;
             background: #b43032;
-            /* border: 2px solid #8B4513;
-            border-radius: 8px; */
-            padding: 15px;
+            padding: 10px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -445,11 +443,12 @@
             color: #fecaca;
         }
 
+        .title-image {
+            width: 50%;
+        }
        
 
-        .rules-list {
 
-            }
         @media (max-width: 800px) {
             .rules-title {margin-top: 0.5em}
             .rules-list {margin-left: 0.8em}
@@ -479,7 +478,7 @@
                 height: auto;
             }
             .cell-title {
-                font-size: 1.2em;
+                font-size: 1em;
             }
             .activity-icon {
                 width: 40%;
@@ -502,14 +501,19 @@
             .student-actions {
                 justify-content: center;
             }
+            .title-image {
+                margin-top: 1em;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1 class="title">GAME ON!</h1>
-            <h2 class="subtitle">LEVEL UP</h2>
+            <img src="title.png" class="title-image">
+            <!-- <h1 class="title">GAME ON!</h1>
+            <h2 class="subtitle">LEVEL UP</h2> -->
             <p class="tagline">GEM TRAILBLAZER SUMMER BINGO</p>
         </header>
 
