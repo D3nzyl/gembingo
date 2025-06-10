@@ -55,7 +55,7 @@
         .tagline {
             font-family: 'Squada One', cursive;
             text-transform: uppercase;
-            font-size: 1.5rem;       /* tweak to fit your design */
+            font-size: 2rem;       /* tweak to fit your design */
             color: #ffcc00;        /* or whatever accent colour you like */
 
         }
@@ -150,7 +150,7 @@
         .bingo-cell {
             font-family: 'Baloo 2', cursive;
             font-weight: 700;
-            background: #b43032;
+            background: #952628; 
             padding: 10px;
             text-align: center;
             display: flex;
@@ -455,7 +455,7 @@
             .title { font-size: 2rem;
                     margin-top: 1em; }
             .subtitle { font-size: 1.8rem; }
-            .tagline { font-size: 1.2rem; }
+            .tagline { font-size: 1.5rem; }
             .bingo-board { 
                 max-width: calc(100vw - 24px);
             }
@@ -623,7 +623,8 @@
     <!-- Include Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 🔥 REPLACE THESE WITH YOUR SUPABASE CREDENTIALS
+
+        // REPLACE THESE WITH YOUR SUPABASE CREDENTIALS
         const SUPABASE_URL = 'https://yywleubcgvtofhesovbf.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5d2xldWJjZ3Z0b2ZoZXNvdmJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMzcwMjIsImV4cCI6MjA2MzgxMzAyMn0.wqnvGj_xXPyZJLN8LmMhQQ2_GX6ixV_NJ-abiNJEC7g';
         
@@ -656,17 +657,17 @@
 
         // Bingo activities with image files and fallback emojis
         const bingoActivities = [
-            { id: 1, title: 'Take a Picture with Merlion', image: 'merlion.png', emoji: '🗽' },
-            { id: 2, title: "Visit NTU's Dim Sum Building", image: 'hive.png', emoji: '🏢' },
-            { id: 3, title: 'Activity by GEM Summer', image: 'star.png', emoji: '⭐' },
-            { id: 4, title: 'Take Photo with GEM Supertrees', image: 'tree.png', emoji: '🌳' },
-            { id: 5, title: 'Complete GEM Summer Survey', image: 'tick.png', emoji: '✅' },
-            { id: 6, title: 'Eat Any Local Dishes', image: 'food.png', emoji: '🍜' },
-            { id: 7, title: 'Take a Welfie with Your Coursemates', image: 'wefie.png', emoji: '👥' },
+            { id: 1, title: 'Participate in the Coin Hunt', image: 'coinhunt.png', emoji: '🪙' },
+            { id: 2, title: "Take a Photo with The Hive", image: 'hive.png', emoji: '🏢' },
+            { id: 3, title: 'Attend One Social Activity', image: 'star.png', emoji: '⭐' },
+            { id: 4, title: 'Take a Photo with the Supertrees', image: 'tree.png', emoji: '🌳' },
+            { id: 5, title: 'Complete End of Programme Survey', image: 'tick.png', emoji: '✅' },
+            { id: 6, title: 'Try Any Local Dishes', image: 'food.png', emoji: '🍜' },
+            { id: 7, title: 'Take a Wefie with Your Coursemates', image: 'wefie.png', emoji: '👥' },
             { id: 8, title: "Take a Photo with S'pore's National Flower", image: 'flower.png', emoji: '🌺' },
-            { id: 9, title: 'Find One GEM Summer Coin', image: 'coinhunt.png', emoji: '🪙' }
+            { id: 9, title: 'Take a Photo with the Merlion', image: 'merlion.png', emoji: '🗽' }
         ];
-
+        
         // Utility functions
         function showStatus(elementId, message, type) {
             const statusEl = document.getElementById(elementId);
